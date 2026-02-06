@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Basic Meta -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title -->
+    <title>User Dashboard | Track Your Weekly Coding Progress – CodeWeek</title>
+
+    <!-- Meta Description -->
+    <meta name="description"
+        content="View your coding statistics, weekly activity, technology usage, and session history. Track your development journey with CodeWeek dashboard.">
+
+    <!-- Author -->
+    <meta name="author" content="CodeWeek">
+
+    <!-- Robots (PRIVATE PAGE) -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Open Graph (for internal/share-safe preview) -->
+    <meta property="og:title" content="CodeWeek User Dashboard">
+    <meta property="og:description"
+        content="Track your coding time, technologies, and weekly progress in one dashboard.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://codeweek.com/assets/images/og-dashboard.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CodeWeek Dashboard">
+    <meta name="twitter:description" content="Analyze your coding habits and progress visually.">
+    <meta name="twitter:image" content="https://codeweek.com/assets/images/og-dashboard.jpg">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/todo.css">
+    <link rel="stylesheet" href="/assets/css/userPage.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/images/favicon-32x32.png" type="image/x-icon">
+</head>
+
+
+<body>
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-btn" id="menuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="brand">
+                <div class="nav-icon">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <span class="brand-name">CodeWeek</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <span class="welcome">
+                Welcome, <strong id="nameSpan">Berat</strong>
+            </span>
+        </div>
+    </header>
+
+    <div class="overlay" id="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="user-info">
+                <span class="user-name" id="userName">Berat Karabulut</span>
+                <span class="user-mail" id="userMail">mail@example.com</span>
+            </div>
+        </div>
+        <button class="logout-btn" id="outBtn">Log Out</button>
+    </aside>
+
+    <section aria-labelledby="user-stats" class="user-stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stats-icon">
+                    <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                </div>
+                <p>Member Since</p>
+                <span class="member-since">
+                    <time>January 24</time>
+                </span>
+            </div>
+            <div class="stat-item">
+                <div class="stats-icon">
+                    <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                </div>
+                <p>Total Time</p>
+                <span class="total-time">0 minutes</span>
+            </div>
+            <div class="stat-item">
+                <div class="stats-icon">
+                    <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>
+                </div>
+                <p>This Week</p>
+                <span class="this-week">0 minutes</span>
+            </div>
+            <div class="stat-item">
+                <div class="stats-icon">
+                    <i class="fa-solid fa-code" aria-hidden="true"></i>
+                </div>
+                <p>This Month</p>
+                <span class="this-month">0 minutes</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="chart-main">
+        <div class="chart-card">
+            <h3>Last 7 Days Activity</h3>
+            <canvas id="weeklyActivity"></canvas>
+            <div class="week-controls">
+                <button id="prevWeek">⬅ Previous Week</button>
+                <span id="weekDisplay"></span>
+                <button id="nextWeek">Next Week ➡</button>
+            </div>
+        </div>
+        <div class="chart-card">
+            <h3>Time by Technology</h3>
+            <canvas id="techChart"></canvas>
+            <div class="tech-legend" id="techLegend"></div>
+        </div>
+    </section>
+
+    <section class="planner-main" aria-label="Weekly Planner Section">
+        <div class="planner">
+            <header class="planner-header">
+                <div class="planner-title">
+                    <h1>Weekly Planner</h1>
+                    <p id="selectedDateDisplay" aria-live="polite">Today's date: </p>
+                </div>
+                <nav class="planner-nav" aria-label="Slider Navigation">
+                    <button id="prev" aria-label="Previous 7 days">◀</button>
+                    <button id="next" aria-label="Next 7 days">▶</button>
+                </nav>
+            </header>
+            <ul class="days-container" id="daysContainer" role="list">
+            </ul>
+        </div>
+    </section>
+
+    <section class="todo-container">
+        <div class="todo-tittle">
+            <h2 id="todoDate"></h2>
+            <button id="addSessionBtn" type="button">+ add session</button>
+        </div>
+        <div class="todo-main">
+            <div class="timer-controls">
+                <span id="timerDisplay">00:00:00</span>
+                <div class="timer-btn">
+                    <button id="startBtn" class="start" type="button">Start</button>
+                    <button id="stopBtn" class="stop" disabled type="button">Stop</button>
+                    <button id="finishBtn" class="finish" disabled type="button">Finish</button>
+                </div>
+            </div>
+            <div class="modal" id="sessionModal">
+                <div class="modal-content">
+                    <h3>Save Session</h3>
+                    <label>Technology Used</label>
+                    <select id="technology">
+                        <!-- Frontend -->
+                        <option>Other</option>
+                        <option>JavaScript</option>
+                        <option>TypeScript</option>
+                        <option>HTML / CSS</option>
+                        <option>React</option>
+                        <option>Vue.js</option>
+                        <option>Angular</option>
+
+                        <!-- Backend -->
+                        <option>Node.js</option>
+                        <option>Python</option>
+                        <option>Java</option>
+                        <option>C# (.NET)</option>
+                        <option>PHP</option>
+                        <option>Go</option>
+                        <option>Ruby</option>
+
+                        <!-- Mobile -->
+                        <option>Flutter (Dart)</option>
+                        <option>Swift (iOS)</option>
+                        <option>Kotlin (Android)</option>
+                        <option>React Native</option>
+
+                        <!-- Database -->
+                        <option>SQL</option>
+                        <option>PostgreSQL</option>
+                        <option>MySQL</option>
+                        <option>MongoDB</option>
+                        <option>Redis</option>
+
+                        <!-- Game / Other -->
+                        <option>Unity (C#)</option>
+                        <option>Unreal Engine (C++)</option>
+                        <option>DevOps</option>
+                        <option>Docker</option>
+                        <option>Kubernetes</option>
+                    </select>
+
+                    <label>Topic</label>
+                    <input type="text" id="topic">
+                    <label>Elapsed Time</label>
+                    <input type="text" id="elapsedTime" placeholder="HH:MM:SS" inputmode="numeric" />
+
+                    <label>Note</label>
+                    <textarea id="note"></textarea>
+                    <div class="modal-buttons">
+                        <button id="saveBtn" type="button">Save</button>
+                        <button id="closeModal" type="button">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="todos-container">
+        <div class="todos-main">
+            <h2 class="todoalert">
+                No sessions for this day yet. Add your first session to start tracking!
+            </h2>
+            <section class="todo-section">
+                <h3>Sessions</h3>
+                <ul id="todoList" class="todo-cards"></ul>
+            </section>
+        </div>
+    </section>
+
+    <script src="/assets/js/main.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="/assets/js/todo.js"></script>
+    <script type="module" src="/assets/js/UI/chartt.js"></script>
+    <script type="module" src="/assets/js/UI/userPage.js"></script>
+</body>
+
+</html>
